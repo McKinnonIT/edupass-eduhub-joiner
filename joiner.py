@@ -6,7 +6,7 @@ import pandas as pd
 parser = argparse.ArgumentParser()
 parser.add_argument("--eduhub", "--eduhub-student-file", type=str, required=True, help="eduHub Student File (ST_XXXX.csv)")
 parser.add_argument("--edupass", "--edupass-student-export", type=str, required=True, help="eduPass Student Export from the EduSTAR MC")
-parser.add_argument("--out", "--out-file", type=str, required=True, help="Output file name or path")
+parser.add_argument("--out", "--out-file", default="merged.csv", type=str, help="Output file name or path")
 args = parser.parse_args()
 
 
@@ -20,6 +20,11 @@ eduhub_data = pd.read_csv(args.eduhub, encoding=get_encoding(args.eduhub))
 edupass_data = pd.read_csv(args.edupass, encoding=get_encoding(args.edupass))
 
 eduhub_data = eduhub_data.loc[eduhub_data["STATUS"].isin(["ACTV", "LVNG"])]
+
+eduhub_data["FIRST_NAME"] = eduhub_data["FIRST_NAME"].str.casefold()
+eduhub_data["SURNAME"] = eduhub_data["SURNAME"].str.casefold()
+edupass_data["firstName"] = edupass_data["firstName"].str.casefold()
+edupass_data["lastName"] = edupass_data["lastName"].str.casefold()
 
 merged_data = edupass_data.merge(
     eduhub_data,
