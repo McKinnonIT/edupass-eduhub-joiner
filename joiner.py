@@ -33,4 +33,5 @@ merged_data = edupass_data.merge(
     right_on=["FIRST_NAME", "SURNAME", "HOME_GROUP"],
 )
 
+merged_data.dropna(subset=['STKEY'], inplace=True)
 merged_data.to_csv(args.out, index=False)
